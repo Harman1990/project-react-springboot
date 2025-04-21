@@ -1,6 +1,6 @@
 import { useState } from "react"
 import './TodoApp.css'
-import {BrowserRouter,Routes,Route,useNavigate} from 'react-router-dom'
+import {BrowserRouter,Routes,Route,useNavigate, useParams} from 'react-router-dom'
 
 export default function TodoApp(){
 
@@ -12,7 +12,9 @@ export default function TodoApp(){
                 <Routes>
                     <Route path="/" element={<LoginComponent></LoginComponent>}></Route>
                     <Route path="/login" element={<LoginComponent></LoginComponent>}></Route>
-                    <Route path="/welcome" element={<WelcomeComponent></WelcomeComponent>}></Route>
+                    <Route path="/welcome/:username" element={<WelcomeComponent></WelcomeComponent>}></Route>
+                    <Route path="/todos" element={<ListTodosComponent></ListTodosComponent>}></Route>
+                    <Route path="*" element={<ErrorComponent></ErrorComponent>}></Route>
                 </Routes>
             </BrowserRouter>
         </div>
@@ -49,7 +51,7 @@ function LoginComponent(){
         if(username=='harman' && password=='dummy'){
             setShowSuccessMessage(true)
             setShowErrorMessage(false)
-            navigate('/welcome')
+            navigate(`/welcome/${username}`)
         }
         else{
             setShowSuccessMessage(false)
@@ -58,8 +60,6 @@ function LoginComponent(){
         }
         
     }
-
-    
 
     
 
@@ -89,9 +89,63 @@ function LoginComponent(){
 
 function WelcomeComponent(){
 
+    const {username} = useParams()
+
     return (
-        <div>
-            Welcome Component
+        <div className="WelcomeComponent">
+            Welcome {username}
+        </div>
+    )
+}
+
+function ErrorComponent(){
+
+    return (
+        <div className="ErrorComponent">
+            Error. Invalid Request.
+        </div>
+    )
+}
+
+function ListTodosComponent(){
+
+    const todos=[
+                    {id:1, description:'Learn JVM'},
+                    {id:2, description:'Learn GC'},
+                    {id:3, description:'Learn Multhithreading'}
+
+    ]
+
+    return (
+
+        
+        <div className="ListTodosComponent">
+            <h1>ToDo Details</h1>
+            <div>
+                <table>
+                    <thead>
+                        <tr>
+                            <td>id</td>
+                            <td>description</td>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        {
+                            todos.map(
+                                todo => (
+                                    <tr key={todo.id}>
+                                        <td>{todo.id}</td>
+                                        <td>{todo.description}</td>
+                                    </tr>
+                                )
+
+                            )
+
+                        }
+                    </tbody>
+
+                </table>
+            </div>
         </div>
     )
 }
