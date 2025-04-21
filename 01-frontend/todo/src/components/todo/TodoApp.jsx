@@ -1,5 +1,6 @@
 import { useState } from "react"
 import './TodoApp.css'
+import {BrowserRouter,Routes,Route,useNavigate} from 'react-router-dom'
 
 export default function TodoApp(){
 
@@ -7,7 +8,13 @@ export default function TodoApp(){
 
         <div className="TodoApp">
             
-            <LoginComponent></LoginComponent>
+            <BrowserRouter>
+                <Routes>
+                    <Route path="/" element={<LoginComponent></LoginComponent>}></Route>
+                    <Route path="/login" element={<LoginComponent></LoginComponent>}></Route>
+                    <Route path="/welcome" element={<WelcomeComponent></WelcomeComponent>}></Route>
+                </Routes>
+            </BrowserRouter>
         </div>
 
 
@@ -25,6 +32,8 @@ function LoginComponent(){
 
     const [showErrorMessage,setShowErrorMessage]=useState(false)
 
+    const navigate=useNavigate()
+
     function handleUsernameChange(event){
         console.log(event.target.value)
         setUsername(event.target.value)
@@ -40,6 +49,7 @@ function LoginComponent(){
         if(username=='harman' && password=='dummy'){
             setShowSuccessMessage(true)
             setShowErrorMessage(false)
+            navigate('/welcome')
         }
         else{
             setShowSuccessMessage(false)
@@ -49,29 +59,16 @@ function LoginComponent(){
         
     }
 
-    function SuccessMessageComponent(){
-        if(showSuccessMessage){
-            return (<div className="successMessage">Authentication Successfull</div>)
-        }
-        else{
-            return  null
-        }
-    }
+    
 
-    function ErrorMessageComponent(){
-        if(showErrorMessage){
-            return (<div className="errorMessage">Authentication Failed</div>)
-        }
-        else{
-            return  null
-        }
-    }
+    
 
     return (
         <div className="Login">
-            <SuccessMessageComponent></SuccessMessageComponent>
+            
 
-            <ErrorMessageComponent></ErrorMessageComponent>
+            {showSuccessMessage && <div className="successMessage">Authentication Successfull</div>}
+            {showErrorMessage && <div className="errorMessage">Authentication Failed</div>}
             
             <div className="LoginForm">
                 <div>
@@ -86,6 +83,15 @@ function LoginComponent(){
                     <button type="button" name="login" onClick={ handleSubmit}>Login</button>
                 </div>
             </div>
+        </div>
+    )
+}
+
+function WelcomeComponent(){
+
+    return (
+        <div>
+            Welcome Component
         </div>
     )
 }
